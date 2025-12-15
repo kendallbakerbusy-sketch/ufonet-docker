@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  ufonet:
+    build: .
+    image: ufonet:latest
+    container_name: ufonet
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mount volumes for persistent data
+      - ./botnet:/app/ufonet/botnet
+      - ./data:/app/ufonet/data
+      - ./maps:/app/ufonet/maps
+    network_mode: host
+    # Privileged mode required for raw socket operations (scapy)
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: unless-stopped
+    command: /bin/bash
+    
+  # Optional: Web GUI service
+  ufonet-gui:
+    build: .
+    image: ufonet:latest
+    container_name: ufonet-gui
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./botnet:/app/ufonet/botnet
+      - ./data:/app/ufonet/data
+      - ./maps:/app/ufonet/maps
+    ports:
+      - "9999:9999"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: unless-stopped
+    command: python3 ufonet --gui

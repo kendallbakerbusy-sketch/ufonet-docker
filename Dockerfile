@@ -12,16 +12,15 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     git \
-    libpython3.11-dev \
-    python3-pycurl \
-    python3-geoip \
-    python3-whois \
-    python3-requests \
-    libgeoip1 \
-    libgeoip-dev \
+    python3-dev \
+    python3-pip \
     libcurl4-openssl-dev \
     libssl-dev \
+    libgeoip1 \
+    libgeoip-dev \
     build-essential \
+    wget \
+    curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -38,16 +37,16 @@ RUN python3 -m pip install --upgrade pip --no-warn-script-location --root-user-a
 RUN python3 -m pip install pycurl --upgrade --root-user-action=ignore
 
 # Install Python dependencies
-RUN python3 -m pip install \
+RUN python3 -m pip install --no-cache-dir \
+    pycurl \
     GeoIP \
     python-geoip \
     pygeoip \
     requests \
-    whois \
+    python-whois \
     scapy \
     pycryptodomex \
     duckduckgo-search \
-    --ignore-installed \
     --root-user-action=ignore
 
 # Make ufonet executable
